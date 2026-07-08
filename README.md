@@ -1,186 +1,188 @@
-# Product Management API - .NET 9 DDD Architecture
+# DevExtreme Angular Components Demo
 
-A clean **Domain-Driven Design (DDD)** implementation of a Product and Category management system using **.NET 9 Web API** and **PostgreSQL**.
+A comprehensive **Angular 19** application showcasing **DevExtreme** components cloned from [js.devexpress.com](https://js.devexpress.com/).
 
-## Architecture
+## Features
 
-```
-src/
-├── Domain/              # Domain Layer (Entities, Interfaces)
-│   ├── Entities/
-│   │   ├── Category.cs
-│   │   └── Product.cs
-│   └── Repositories/
-│       ├── ICategoryRepository.cs
-│       └── IProductRepository.cs
-│
-├── Application/         # Application Layer (DTOs, Services)
-│   ├── DTOs/
-│   │   ├── CategoryDto.cs
-│   │   └── ProductDto.cs
-│   └── Services/
-│       ├── ICategoryService.cs
-│       ├── CategoryService.cs
-│       ├── IProductService.cs
-│       └── ProductService.cs
-│
-├── Infrastructure/      # Infrastructure Layer (EF Core, Repositories)
-│   ├── Data/
-│   │   └── AppDbContext.cs
-│   └── Repositories/
-│       ├── CategoryRepository.cs
-│       └── ProductRepository.cs
-│
-└── Presentation/        # Presentation Layer (API Controllers)
-    ├── Controllers/
-    │   ├── CategoryController.cs
-    │   └── ProductController.cs
-    └── Program/
-        ├── Program.cs
-        ├── appsettings.json
-        └── appsettings.Development.json
-```
+This project includes the following DevExtreme components:
+
+- **Data Grid** - Powerful data grid with sorting, filtering, grouping, and paging
+- **Form** - Form components with validation and various input types
+- **Chart** - Line, Bar, Pie charts and Range Selector
+- **Scheduler** - Calendar and scheduling component
+- **Tree View** - Hierarchical data display
+- **Tabs** - Tabbed interface with various configurations
+- **Popup** - Modal and popup windows
+- **Toolbar** - Customizable toolbar with buttons and form elements
+- **Menu** - Horizontal, vertical, and context menus
+- **Button** - Various button types, sizes, and states
 
 ## Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [PostgreSQL](https://www.postgresql.org/download/)
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [Angular CLI](https://angular.io/cli) (v19 or later)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-## Setup
+## Installation
 
-### 1. Configure Database Connection
-
-Edit `src/Presentation/appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=ProductManagementDb;Username=postgres;Password=yourpassword"
-  }
-}
+1. Clone the repository:
+```bash
+git clone https://github.com/thedreamer17042004/test1.git
+cd test1
 ```
 
-Replace with your PostgreSQL credentials.
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-### 2. Create Database
+3. Install DevExtreme packages:
+```bash
+npm install devextreme devextreme-angular
+# or
+yarn add devextreme devextreme-angular
+```
 
-Run the following commands:
+## Running the Application
 
 ```bash
-# Navigate to Presentation project
-dotnet ef migrations add InitialCreate --project src/Infrastructure --startup-project src/Presentation
-
-# Apply migrations
-dotnet ef database update --project src/Infrastructure --startup-project src/Presentation
+ng serve
 ```
 
-### 3. Run the Application
-
-```bash
-cd src/Presentation
-dotnet run
-```
-
-The API will be available at:
-- **Swagger UI**: `https://localhost:5001/swagger`
-- **API Base URL**: `https://localhost:5001/api`
-
-## API Endpoints
-
-### Categories
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/category` | Get all categories |
-| GET | `/api/category/{id}` | Get category by ID |
-| POST | `/api/category` | Create a new category |
-| PUT | `/api/category/{id}` | Update a category |
-| DELETE | `/api/category/{id}` | Delete a category |
-
-### Products
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/product` | Get all products |
-| GET | `/api/product/{id}` | Get product by ID |
-| GET | `/api/product/category/{categoryId}` | Get products by category |
-| POST | `/api/product` | Create a new product |
-| PUT | `/api/product/{id}` | Update a product |
-| DELETE | `/api/product/{id}` | Delete a product |
-
-## Request/Response Examples
-
-### Create Category
-
-**Request:**
-```http
-POST /api/category
-Content-Type: application/json
-
-{
-  "name": "Electronics",
-  "description": "Electronic devices and gadgets"
-}
-```
-
-**Response:**
-```json
-{
-  "id": 1,
-  "name": "Electronics",
-  "description": "Electronic devices and gadgets",
-  "createdAt": "2024-01-01T00:00:00Z",
-  "updatedAt": null
-}
-```
-
-### Create Product
-
-**Request:**
-```http
-POST /api/product
-Content-Type: application/json
-
-{
-  "name": "Laptop",
-  "description": "High-performance laptop",
-  "price": 999.99,
-  "stockQuantity": 10,
-  "categoryId": 1
-}
-```
-
-**Response:**
-```json
-{
-  "id": 1,
-  "name": "Laptop",
-  "description": "High-performance laptop",
-  "price": 999.99,
-  "stockQuantity": 10,
-  "categoryId": 1,
-  "categoryName": "Electronics",
-  "createdAt": "2024-01-01T00:00:00Z",
-  "updatedAt": null
-}
-```
-
-## Technologies Used
-
-- **.NET 9** - Latest .NET version
-- **ASP.NET Core Web API** - REST API framework
-- **Entity Framework Core** - ORM for PostgreSQL
-- **Npgsql** - PostgreSQL provider for EF Core
-- **Swagger** - API documentation
-- **DDD Architecture** - Clean separation of concerns
+Open your browser and navigate to `http://localhost:4200`
 
 ## Project Structure
 
-- **Domain Layer**: Contains business entities and repository interfaces
-- **Application Layer**: Contains DTOs and business services
-- **Infrastructure Layer**: Contains EF Core implementation and repositories
-- **Presentation Layer**: Contains API controllers and configuration
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── home/              # Home page with component overview
+│   │   ├── data-grid/         # Data Grid component
+│   │   ├── form/              # Form component
+│   │   ├── chart/             # Chart component
+│   │   ├── scheduler/         # Scheduler component
+│   │   ├── tree-view/         # Tree View component
+│   │   ├── tabs/              # Tabs component
+│   │   ├── popup/             # Popup component
+│   │   ├── toolbar/           # Toolbar component
+│   │   ├── menu/              # Menu component
+│   │   └── button/            # Button component
+│   ├── app.component.ts       # Main app component
+│   ├── app.config.ts          # App configuration
+│   └── app.routes.ts          # Routing configuration
+├── assets/                    # Static assets
+├── environments/              # Environment configurations
+├── index.html                # Main HTML template
+├── main.ts                   # Application entry point
+└── styles.scss               # Global styles
+```
+
+## Available Scripts
+
+- `ng serve` - Start development server
+- `ng build` - Build for production
+- `ng test` - Run unit tests
+
+## Components Overview
+
+### 1. Data Grid
+- Sorting (single and multiple columns)
+- Filtering (row and header filters)
+- Grouping with panel
+- Paging with page size selector
+- Search panel
+- Column reordering and resizing
+- Row selection (multiple)
+- Export to Excel
+
+### 2. Form
+- Various input types (text, number, date, checkbox, select, textarea)
+- Validation rules (required, email, string length)
+- Validation summary display
+- Grouped form items
+- Form submission and reset
+
+### 3. Chart
+- Line Chart with tooltips and labels
+- Bar Chart for categorical data
+- Pie Chart for proportional data
+- Range Selector for time-based data
+- Export functionality
+- Custom formatting (currency, percent)
+
+### 4. Scheduler
+- Multiple views (Day, Week, Month, Agenda)
+- Appointment management (create, edit, delete)
+- Drag and drop appointments
+- Resize appointments
+- Recurring appointments
+- All-day appointments
+- Custom tooltips
+
+### 5. Tree View
+- Hierarchical data display
+- Check boxes for selection
+- Multiple selection modes
+- Search functionality
+- Toolbar with expand/collapse all
+- Custom data source formats
+
+### 6. Tabs
+- Simple tabs with text content
+- Tabs with icons
+- TabPanel with separate title and content templates
+- Vertical tabs layout
+- Scrolling and navigation buttons
+- Swipe gestures (for touch devices)
+
+### 7. Popup
+- Simple popup with basic content
+- Form popup with input fields
+- Confirmation popup for actions
+- Full screen popup for large content
+- Positioned popup relative to elements
+- Drag and drop functionality
+
+### 8. Toolbar
+- Basic toolbar with buttons
+- Toolbar with dropdown menus
+- Toolbar with form elements (textbox, selectbox, datebox)
+- Custom toolbar items and branding
+- Multi-line toolbar with grouped items
+
+### 9. Menu
+- Horizontal menu layout
+- Vertical menu layout
+- Context menu (right-click)
+- Menu with icons
+- Custom menu item templates
+- Disabled menu items
+
+### 10. Button
+- Different button types (default, success, normal, danger)
+- Buttons with icons
+- Icon-only buttons
+- Various button sizes
+- Button states (normal, disabled, loading)
+- Submit behavior for forms
+- Button groups
+- Custom styling with CSS classes
+
+## DevExtreme Resources
+
+- [DevExtreme Documentation](https://js.devexpress.com/Documentation/Guide/)
+- [DevExtreme Demos](https://js.devexpress.com/Demos/WidgetsGallery/Demo/)
+- [DevExtreme Angular Components](https://js.devexpress.com/Demos/WidgetsGallery/Demo/Integration/Angular/Overview/)
 
 ## License
 
-MIT License
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions about DevExtreme components, visit:
+- [DevExtreme Support](https://www.devexpress.com/Support/)
+- [DevExtreme GitHub](https://github.com/DevExpress/DevExtreme)
