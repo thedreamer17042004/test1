@@ -1,273 +1,207 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxMenuModule, DxContextMenuModule, DxButtonModule } from 'devextreme-angular';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, DxMenuModule, DxContextMenuModule, DxButtonModule],
+  imports: [
+    CommonModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatToolbarModule
+  ],
   template: `
     <div class="component-container">
-      <h2 class="component-title">Menu Components</h2>
+      <h2 class="component-title">Custom Menu</h2>
       
-      <!-- Horizontal Menu -->
-      <div class="component-card mb-20">
-        <h3>Horizontal Menu</h3>
-        <dx-menu
-          [items]="mainMenuItems"
-          [orientation]="'horizontal'"
-          [showFirstSubmenuMode]="{ name: 'onHover', delay: { show: 0, hide: 500 } }"
-          (onItemClick)="onMenuItemClick($event)"
-        />
-        <p class="mt-20"><strong>Selected Item:</strong> {{ selectedMenuItem || 'None' }}</p>
-      </div>
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>Horizontal Menu</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-toolbar color="primary">
+            <button mat-button [matMenuTriggerFor]="fileMenu">
+              <mat-icon>description</mat-icon> File
+            </button>
+            <mat-menu #fileMenu="matMenu">
+              <button mat-menu-item (click)="onMenuClick('New')">
+                <mat-icon>add</mat-icon> New
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Open')">
+                <mat-icon>folder_open</mat-icon> Open
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Save')">
+                <mat-icon>save</mat-icon> Save
+              </button>
+              <button mat-menu-item disabled>
+                <mat-icon>save_as</mat-icon> Save As
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="onMenuClick('Print')">
+                <mat-icon>print</mat-icon> Print
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Exit')">
+                <mat-icon>exit_to_app</mat-icon> Exit
+              </button>
+            </mat-menu>
+            
+            <button mat-button [matMenuTriggerFor]="editMenu">
+              <mat-icon>edit</mat-icon> Edit
+            </button>
+            <mat-menu #editMenu="matMenu">
+              <button mat-menu-item (click)="onMenuClick('Undo')">
+                <mat-icon>undo</mat-icon> Undo
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Redo')">
+                <mat-icon>redo</mat-icon> Redo
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="onMenuClick('Cut')">
+                <mat-icon>content_cut</mat-icon> Cut
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Copy')">
+                <mat-icon>content_copy</mat-icon> Copy
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Paste')">
+                <mat-icon>content_paste</mat-icon> Paste
+              </button>
+            </mat-menu>
+            
+            <button mat-button [matMenuTriggerFor]="viewMenu">
+              <mat-icon>visibility</mat-icon> View
+            </button>
+            <mat-menu #viewMenu="matMenu">
+              <button mat-menu-item (click)="onMenuClick('Refresh')">
+                <mat-icon>refresh</mat-icon> Refresh
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Zoom In')">
+                <mat-icon>zoom_in</mat-icon> Zoom In
+              </button>
+              <button mat-menu-item (click)="onMenuClick('Zoom Out')">
+                <mat-icon>zoom_out</mat-icon> Zoom Out
+              </button>
+            </mat-menu>
+          </mat-toolbar>
+          <p class="mt-20"><strong>Last Menu Item:</strong> {{ lastMenuItem || 'None' }}</p>
+        </mat-card-content>
+      </mat-card>
       
-      <!-- Vertical Menu -->
-      <div class="component-card mb-20">
-        <h3>Vertical Menu</h3>
-        <div style="display: flex; gap: 20px;">
-          <dx-menu
-            [items]="verticalMenuItems"
-            [orientation]="'vertical'"
-            [showFirstSubmenuMode]="{ name: 'onClick' }"
-            (onItemClick)="onMenuItemClick($event)"
-          />
-          
-          <div class="menu-content">
-            <p>Click on menu items to see the selection.</p>
-            <p>Submenus open on click for vertical orientation.</p>
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>Context Menu</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Right-click on the area below to open context menu.</p>
+          <div 
+            style="border: 2px dashed #ccc; height: 200px; display: flex; justify-content: center; align-items: center; background: #f9f9f9;"
+            (contextmenu)="onContextMenu($event)"
+          >
+            <p>Right-click here for context menu</p>
           </div>
-        </div>
-      </div>
+          <p class="mt-20"><strong>Context Menu Item:</strong> {{ contextMenuItem || 'None' }}</p>
+        </mat-card-content>
+      </mat-card>
       
-      <!-- Context Menu -->
-      <div class="component-card mb-20">
-        <h3>Context Menu (Right-click on the area below)</h3>
-        <div 
-          style="border: 1px dashed #ccc; height: 200px; padding: 20px; background: #f9f9f9;"
-          (contextmenu)="onContextMenu($event)"
-        >
-          <p>Right-click anywhere in this area to open the context menu.</p>
-          <p><strong>Selected Context Item:</strong> {{ selectedContextItem || 'None' }}</p>
-        </div>
-        
-        <dx-context-menu
-          [(visible)]="contextMenuVisible"
-          [target]="'#contextMenuTarget'"
-          [items]="contextMenuItems"
-          [position]="{ of: '#contextMenuTarget', offset: { x: 0, y: 0 } }"
-          (onItemClick)="onContextMenuItemClick($event)"
-        />
-        <div id="contextMenuTarget" style="display: none;"></div>
-      </div>
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>Menu with Icons</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <button mat-button [matMenuTriggerFor]="iconMenu">
+            <mat-icon>menu</mat-icon> Menu with Icons
+          </button>
+          <mat-menu #iconMenu="matMenu">
+            <button mat-menu-item *ngFor="let item of menuItems" (click)="onMenuClick(item.label)">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label }}</span>
+            </button>
+          </mat-menu>
+        </mat-card-content>
+      </mat-card>
       
-      <!-- Menu with Icons -->
-      <div class="component-card mb-20">
-        <h3>Menu with Icons</h3>
-        <dx-menu
-          [items]="iconMenuItems"
-          [orientation]="'horizontal'"
-          [showFirstSubmenuMode]="{ name: 'onHover' }"
-          [displayExpr]="'text'"
-          [iconExpr]="'icon'"
-        />
-      </div>
-      
-      <!-- Menu with Custom Templates -->
-      <div class="component-card mb-20">
-        <h3>Menu with Custom Templates</h3>
-        <dx-menu [items]="customMenuItems" [orientation]="'horizontal'">
-          <div *dxTemplate="let item of 'item'">
-            <span class="dx-icon {{ item.icon }}"></span>
-            <span style="margin-left: 8px;" class="dx-menu-item-text">{{ item.text }}</span>
-            <span *ngIf="item.badge" style="margin-left: 8px;" class="badge">{{ item.badge }}</span>
-          </div>
-        </dx-menu>
-      </div>
-      
-      <!-- Menu with Disabled Items -->
-      <div class="component-card">
-        <h3>Menu with Disabled Items</h3>
-        <dx-menu
-          [items]="disabledMenuItems"
-          [orientation]="'horizontal'"
-          [showFirstSubmenuMode]="{ name: 'onHover' }"
-        />
-        <p class="mt-20">Some menu items are disabled and cannot be clicked.</p>
-      </div>
+      <mat-card class="component-card">
+        <mat-card-header>
+          <mat-card-title>Nested Menu</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <button mat-button [matMenuTriggerFor]="nestedMenu">
+            <mat-icon>menu</mat-icon> Nested Menu
+          </button>
+          <mat-menu #nestedMenu="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="productsMenu">
+              <mat-icon>inventory</mat-icon> Products
+            </button>
+            <mat-menu #productsMenu="matMenu">
+              <button mat-menu-item (click)="onMenuClick('All Products')">All Products</button>
+              <button mat-menu-item (click)="onMenuClick('Categories')">Categories</button>
+              <button mat-menu-item (click)="onMenuClick('Inventory')">Inventory</button>
+            </mat-menu>
+            
+            <button mat-menu-item [matMenuTriggerFor]="ordersMenu">
+              <mat-icon>shopping_cart</mat-icon> Orders
+            </button>
+            <mat-menu #ordersMenu="matMenu">
+              <button mat-menu-item (click)="onMenuClick('New Orders')">New Orders</button>
+              <button mat-menu-item (click)="onMenuClick('Order History')">Order History</button>
+            </mat-menu>
+            
+            <mat-divider></mat-divider>
+            
+            <button mat-menu-item (click)="onMenuClick('Settings')">
+              <mat-icon>settings</mat-icon> Settings
+            </button>
+          </mat-menu>
+        </mat-card-content>
+      </mat-card>
       
       <div class="mt-20">
-        <h3>Features Demonstrated:</h3>
+        <h3>Features:</h3>
         <ul>
-          <li>Horizontal menu layout</li>
-          <li>Vertical menu layout</li>
+          <li>Horizontal menu with dropdown</li>
           <li>Context menu (right-click)</li>
           <li>Menu with icons</li>
-          <li>Custom menu item templates</li>
+          <li>Nested menus (submenus)</li>
           <li>Disabled menu items</li>
-          <li>Submenu display modes (hover, click)</li>
-          <li>Event handling for menu items</li>
-          <li>Menu item selection</li>
+          <li>Menu dividers</li>
+          <li>Event handling</li>
+          <li>Material Design styling</li>
         </ul>
       </div>
     </div>
   `,
   styles: [`
-    .menu-content {
-      flex: 1;
-      padding: 20px;
-      background: #f5f5f5;
-      border-radius: 4px;
-    }
-    
-    .badge {
-      background: #ff4081;
-      color: white;
-      border-radius: 10px;
-      padding: 2px 6px;
-      font-size: 12px;
+    .mt-20 {
+      margin-top: 20px;
     }
   `]
 })
 export class MenuComponent {
-  selectedMenuItem = '';
-  selectedContextItem = '';
-  contextMenuVisible = false;
-  contextMenuPosition = { x: 0, y: 0 };
-
-  mainMenuItems = [
-    {
-      text: 'File',
-      items: [
-        { text: 'New', icon: 'add' },
-        { text: 'Open', icon: 'folder' },
-        { text: 'Save', icon: 'save' },
-        { text: 'Save As', icon: 'save' },
-        { text: 'Print', icon: 'print' },
-        { text: 'Exit', icon: 'exit', beginGroup: true }
-      ]
-    },
-    {
-      text: 'Edit',
-      items: [
-        { text: 'Undo', icon: 'undo' },
-        { text: 'Redo', icon: 'redo' },
-        { text: 'Cut', icon: 'cut', beginGroup: true },
-        { text: 'Copy', icon: 'copy' },
-        { text: 'Paste', icon: 'paste' },
-        { text: 'Delete', icon: 'trash', beginGroup: true },
-        { text: 'Select All', icon: 'selectall' }
-      ]
-    },
-    {
-      text: 'View',
-      items: [
-        { text: 'Refresh', icon: 'refresh' },
-        { text: 'Zoom In', icon: 'zoomplus' },
-        { text: 'Zoom Out', icon: 'zoomminus' },
-        { text: 'Reset Zoom', icon: 'zoomreset', beginGroup: true },
-        { text: 'Full Screen', icon: 'fullscreen' }
-      ]
-    },
-    {
-      text: 'Help',
-      items: [
-        { text: 'Help', icon: 'help' },
-        { text: 'About', icon: 'info' }
-      ]
-    }
+  lastMenuItem = '';
+  contextMenuItem = '';
+  
+  menuItems = [
+    { label: 'Dashboard', icon: 'dashboard' },
+    { label: 'Products', icon: 'inventory' },
+    { label: 'Orders', icon: 'shopping_cart' },
+    { label: 'Customers', icon: 'people' },
+    { label: 'Reports', icon: 'assessment' },
+    { label: 'Settings', icon: 'settings' }
   ];
-
-  verticalMenuItems = [
-    {
-      text: 'Dashboard',
-      icon: 'home'
-    },
-    {
-      text: 'Products',
-      icon: 'product',
-      items: [
-        { text: 'All Products', icon: 'group' },
-        { text: 'Categories', icon: 'folder' },
-        { text: 'Inventory', icon: 'inventory' }
-      ]
-    },
-    {
-      text: 'Orders',
-      icon: 'cart',
-      items: [
-        { text: 'New Orders', icon: 'add' },
-        { text: 'Order History', icon: 'history' }
-      ]
-    },
-    {
-      text: 'Customers',
-      icon: 'user',
-      items: [
-        { text: 'Customer List', icon: 'group' },
-        { text: 'Customer Groups', icon: 'folder' }
-      ]
-    },
-    {
-      text: 'Reports',
-      icon: 'chart',
-      items: [
-        { text: 'Sales Report', icon: 'money' },
-        { text: 'Inventory Report', icon: 'inventory' }
-      ]
-    },
-    {
-      text: 'Settings',
-      icon: 'gear',
-      items: [
-        { text: 'User Management', icon: 'user' },
-        { text: 'System Settings', icon: 'gear' }
-      ]
-    }
-  ];
-
-  contextMenuItems = [
-    { text: 'Copy', icon: 'copy' },
-    { text: 'Paste', icon: 'paste' },
-    { text: 'Cut', icon: 'cut' },
-    { text: 'Delete', icon: 'trash', beginGroup: true },
-    { text: 'Select All', icon: 'selectall' }
-  ];
-
-  iconMenuItems = [
-    { text: 'Dashboard', icon: 'home' },
-    { text: 'Products', icon: 'product' },
-    { text: 'Orders', icon: 'cart' },
-    { text: 'Customers', icon: 'user' },
-    { text: 'Reports', icon: 'chart' },
-    { text: 'Settings', icon: 'gear' }
-  ];
-
-  customMenuItems = [
-    { text: 'Inbox', icon: 'email', badge: '12' },
-    { text: 'Notifications', icon: 'bell', badge: '5' },
-    { text: 'Messages', icon: 'message', badge: '8' },
-    { text: 'Tasks', icon: 'task', badge: '3' }
-  ];
-
-  disabledMenuItems = [
-    { text: 'File', items: [{ text: 'New' }, { text: 'Open' }, { text: 'Save', disabled: true }] },
-    { text: 'Edit', items: [{ text: 'Undo' }, { text: 'Redo', disabled: true }, { text: 'Cut' }] },
-    { text: 'View', items: [{ text: 'Refresh' }, { text: 'Zoom In', disabled: true }] }
-  ];
-
-  onMenuItemClick(event: any) {
-    this.selectedMenuItem = event.itemData.text;
+  
+  onMenuClick(item: string) {
+    this.lastMenuItem = item;
   }
-
+  
   onContextMenu(event: MouseEvent) {
     event.preventDefault();
-    this.contextMenuPosition = { x: event.clientX, y: event.clientY };
-    this.contextMenuVisible = true;
-  }
-
-  onContextMenuItemClick(event: any) {
-    this.selectedContextItem = event.itemData.text;
-    this.contextMenuVisible = false;
+    // In a real app, you would open a context menu at the mouse position
+    this.contextMenuItem = 'Context menu would open at: ' + event.clientX + ', ' + event.clientY;
   }
 }

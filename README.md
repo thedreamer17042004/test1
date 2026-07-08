@@ -1,53 +1,41 @@
-# DevExtreme Angular Components Demo
+# Custom Angular Components - DevExtreme Clone
 
-A comprehensive **Angular 19** application showcasing **DevExtreme** components cloned from [js.devexpress.com](https://js.devexpress.com/).
+A **100% free** Angular 19 application with custom-built components inspired by DevExtreme, using **Angular Material** and **pure CSS/Canvas API** (no external paid libraries).
 
 ## Features
 
-This project includes the following DevExtreme components:
+This project includes custom implementations of the following components:
 
-- **Data Grid** - Powerful data grid with sorting, filtering, grouping, and paging
-- **Form** - Form components with validation and various input types
-- **Chart** - Line, Bar, Pie charts and Range Selector
-- **Scheduler** - Calendar and scheduling component
-- **Tree View** - Hierarchical data display
-- **Tabs** - Tabbed interface with various configurations
-- **Popup** - Modal and popup windows
-- **Toolbar** - Customizable toolbar with buttons and form elements
-- **Menu** - Horizontal, vertical, and context menus
-- **Button** - Various button types, sizes, and states
+- **Data Grid** - Full-featured data table with sorting, filtering, pagination, row selection
+- **Form** - Comprehensive form with validation, various input types, and Material Design styling
+- **Chart** - Line, Bar, Pie, Area charts using **pure Canvas API** (no Chart.js or DevExtreme)
+- **Scheduler** - Calendar with Day, Week, Month, Agenda views
+- **Tree View** - Hierarchical data display with expand/collapse
+- **Tabs** - Tabbed interface (coming soon)
+- **Popup** - Modal dialogs (coming soon)
+- **Toolbar** - Customizable toolbar (coming soon)
+- **Menu** - Navigation menus (coming soon)
+- **Button** - Various button styles (coming soon)
 
-## Prerequisites
+## Tech Stack
 
-- [Node.js](https://nodejs.org/) (v18 or later)
-- [Angular CLI](https://angular.io/cli) (v19 or later)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- **Angular 19** - Latest Angular version
+- **Angular Material** - Free Material Design components
+- **Pure Canvas API** - For charts (no external libraries)
+- **CSS/SCSS** - Custom styling
+- **TypeScript** - Strong typing
 
 ## Installation
 
-1. Clone the repository:
 ```bash
+# Clone the repository
 git clone https://github.com/thedreamer17042004/test1.git
 cd test1
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-# or
-yarn install
-```
 
-3. Install DevExtreme packages:
-```bash
-npm install devextreme devextreme-angular
-# or
-yarn add devextreme devextreme-angular
-```
-
-## Running the Application
-
-```bash
+# Run the application
 ng serve
 ```
 
@@ -59,130 +47,94 @@ Open your browser and navigate to `http://localhost:4200`
 src/
 ├── app/
 │   ├── components/
-│   │   ├── home/              # Home page with component overview
-│   │   ├── data-grid/         # Data Grid component
-│   │   ├── form/              # Form component
-│   │   ├── chart/             # Chart component
-│   │   ├── scheduler/         # Scheduler component
-│   │   ├── tree-view/         # Tree View component
-│   │   ├── tabs/              # Tabs component
-│   │   ├── popup/             # Popup component
-│   │   ├── toolbar/           # Toolbar component
-│   │   ├── menu/              # Menu component
-│   │   └── button/            # Button component
+│   │   ├── home/              # Home page
+│   │   ├── data-grid/         # Custom Data Grid
+│   │   ├── form/              # Custom Form
+│   │   ├── chart/             # Custom Charts (Canvas API)
+│   │   ├── scheduler/         # Custom Scheduler
+│   │   └── tree-view/         # Custom Tree View
 │   ├── app.component.ts       # Main app component
 │   ├── app.config.ts          # App configuration
-│   └── app.routes.ts          # Routing configuration
-├── assets/                    # Static assets
-├── environments/              # Environment configurations
-├── index.html                # Main HTML template
-├── main.ts                   # Application entry point
-└── styles.scss               # Global styles
+│   └── app.routes.ts          # Routing
+├── styles.scss               # Global styles
+├── index.html                # HTML template
+└── main.ts                   # Entry point
 ```
 
-## Available Scripts
-
-- `ng serve` - Start development server
-- `ng build` - Build for production
-- `ng test` - Run unit tests
-
-## Components Overview
+## Key Features
 
 ### 1. Data Grid
-- Sorting (single and multiple columns)
-- Filtering (row and header filters)
-- Grouping with panel
-- Paging with page size selector
-- Search panel
-- Column reordering and resizing
-- Row selection (multiple)
-- Export to Excel
+- ✅ Sorting by column headers
+- ✅ Filtering with search box
+- ✅ Pagination with page size options
+- ✅ Row selection with checkboxes
+- ✅ Column visibility toggle
+- ✅ Export to CSV
+- ✅ Add/Edit/Delete rows
 
 ### 2. Form
-- Various input types (text, number, date, checkbox, select, textarea)
-- Validation rules (required, email, string length)
-- Validation summary display
-- Grouped form items
-- Form submission and reset
+- ✅ Reactive Forms with validation
+- ✅ Multiple form sections
+- ✅ Various input types (text, email, number, date, select, textarea)
+- ✅ Material Design form fields
+- ✅ Slide toggles for boolean values
+- ✅ Form submission and reset
 
-### 3. Chart
-- Line Chart with tooltips and labels
-- Bar Chart for categorical data
-- Pie Chart for proportional data
-- Range Selector for time-based data
-- Export functionality
-- Custom formatting (currency, percent)
+### 3. Chart (Pure Canvas API)
+- ✅ Line Chart with multiple series
+- ✅ Bar Chart with custom colors
+- ✅ Pie Chart with legend
+- ✅ Area Chart
+- ✅ Responsive design
+- ✅ Custom color schemes
+- ✅ **NO external chart libraries!**
 
 ### 4. Scheduler
-- Multiple views (Day, Week, Month, Agenda)
-- Appointment management (create, edit, delete)
-- Drag and drop appointments
-- Resize appointments
-- Recurring appointments
-- All-day appointments
-- Custom tooltips
+- ✅ Day, Week, Month, Agenda views
+- ✅ Navigation between dates
+- ✅ Appointment management
+- ✅ Color-coded appointments
+- ✅ Today button
 
 ### 5. Tree View
-- Hierarchical data display
-- Check boxes for selection
-- Multiple selection modes
-- Search functionality
-- Toolbar with expand/collapse all
-- Custom data source formats
+- ✅ Hierarchical data display
+- ✅ Expand/collapse nodes
+- ✅ Search functionality
+- ✅ Checkbox selection
+- ✅ Custom icons
 
-### 6. Tabs
-- Simple tabs with text content
-- Tabs with icons
-- TabPanel with separate title and content templates
-- Vertical tabs layout
-- Scrolling and navigation buttons
-- Swipe gestures (for touch devices)
+## Why This Project?
 
-### 7. Popup
-- Simple popup with basic content
-- Form popup with input fields
-- Confirmation popup for actions
-- Full screen popup for large content
-- Positioned popup relative to elements
-- Drag and drop functionality
+- **100% Free** - No paid libraries like DevExtreme
+- **Lightweight** - Uses Angular Material and pure CSS/Canvas
+- **Customizable** - Easy to modify and extend
+- **Modern** - Angular 19 with standalone components
+- **Responsive** - Works on all screen sizes
 
-### 8. Toolbar
-- Basic toolbar with buttons
-- Toolbar with dropdown menus
-- Toolbar with form elements (textbox, selectbox, datebox)
-- Custom toolbar items and branding
-- Multi-line toolbar with grouped items
+## Comparison with DevExtreme
 
-### 9. Menu
-- Horizontal menu layout
-- Vertical menu layout
-- Context menu (right-click)
-- Menu with icons
-- Custom menu item templates
-- Disabled menu items
-
-### 10. Button
-- Different button types (default, success, normal, danger)
-- Buttons with icons
-- Icon-only buttons
-- Various button sizes
-- Button states (normal, disabled, loading)
-- Submit behavior for forms
-- Button groups
-- Custom styling with CSS classes
-
-## DevExtreme Resources
-
-- [DevExtreme Documentation](https://js.devexpress.com/Documentation/Guide/)
-- [DevExtreme Demos](https://js.devexpress.com/Demos/WidgetsGallery/Demo/)
-- [DevExtreme Angular Components](https://js.devexpress.com/Demos/WidgetsGallery/Demo/Integration/Angular/Overview/)
+| Feature | DevExtreme | This Project |
+|---------|-----------|--------------|
+| Cost | Paid ($) | **Free** |
+| Data Grid | ✅ | ✅ |
+| Form | ✅ | ✅ |
+| Charts | ✅ | ✅ (Canvas API) |
+| Scheduler | ✅ | ✅ |
+| Tree View | ✅ | ✅ |
+| Dependencies | Heavy | Lightweight |
+| Customization | Limited | Full Control |
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License - Free for personal and commercial use!
+
+## Contributing
+
+Feel free to contribute by:
+- Reporting bugs
+- Suggesting features
+- Submitting pull requests
 
 ## Support
 
-For support and questions about DevExtreme components, visit:
-- [DevExtreme Support](https://www.devexpress.com/Support/)
-- [DevExtreme GitHub](https://github.com/DevExpress/DevExtreme)
+For questions and support, please open an issue on GitHub.

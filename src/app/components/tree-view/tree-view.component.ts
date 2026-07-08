@@ -1,206 +1,275 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxTreeViewModule } from 'devextreme-angular';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTreeModule, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+
+interface TreeNode {
+  name: string;
+  children?: TreeNode[];
+}
+
+interface FlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
 
 @Component({
   selector: 'app-tree-view',
   standalone: true,
-  imports: [CommonModule, DxTreeViewModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTreeModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
+  ],
   template: `
     <div class="component-container">
-      <h2 class="component-title">Tree View</h2>
+      <h2 class="component-title">Custom Tree View</h2>
       
-      <div class="dx-card mb-20">
-        <h3>File Explorer</h3>
-        <dx-tree-view
-          [dataSource]="fileSystem"
-          [height]="400"
-          [width]="100%"
-          [showCheckBoxes]="true"
-          [selectNodesRecursive]="false"
-          [searchEnabled]="true"
-          [searchMode]="'contains'"
-          [searchTimeout]="300"
-          [placeholder]="'Search files...'"
-          (onItemClick)="onItemClick($event)"
-          (onItemSelectionChanged)="onSelectionChanged($event)"
-          (onItemExpanded)="onItemExpanded($event)"
-        >
-          <dxo-selection [mode]="'multiple'" />
-          <dxo-search [visible]="true" />
-          <dxo-toolbar [visible]="true">
-            <dxi-item name="expandAll" />
-            <dxi-item name="collapseAll" />
-          </dxo-toolbar>
-        </dx-tree-view>
-        
-        <div class="mt-20">
-          <p><strong>Selected Items:</strong> {{ selectedItems.join(', ') || 'None' }}</p>
-          <p><strong>Last Clicked:</strong> {{ lastClicked || 'None' }}</p>
-        </div>
-      </div>
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>File Explorer</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="mb-20">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="filterTree($event)" placeholder="Search files...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <mat-tree [dataSource]="treeDataSource" [treeControl]="treeControl">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+              <mat-checkbox [checked]="node.name === 'Documents'" class="mr-10"></mat-checkbox>
+              <mat-icon class="mr-10">
+                {{ node.name.includes('doc') ? 'description' : node.name.includes('pdf') ? 'picture_as_pdf' : 
+                   node.name.includes('xls') ? 'grid_view' : node.children ? 'folder' : 'insert_drive_file' }}
+              </mat-icon>
+              {{ node.name }}
+            </mat-tree-node>
+            
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+              <div class="mat-tree-node">
+                <button mat-icon-button matTreeNodeToggle>
+                  <mat-icon>
+                    {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                  </mat-icon>
+                </button>
+                <mat-checkbox [checked]="node.name === 'Projects'" class="mr-10"></mat-checkbox>
+                <mat-icon class="mr-10">folder</mat-icon>
+                {{ node.name }}
+              </div>
+              <div [class.tree-children]="true">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </div>
+            </mat-nested-tree-node>
+          </mat-tree>
+        </mat-card-content>
+      </mat-card>
       
-      <div class="dx-card mb-20">
-        <h3>Organization Chart</h3>
-        <dx-tree-view
-          [dataSource]="organization"
-          [height]="400"
-          [width]="100%"
-          [keyExpr]="'id'"
-          [displayExpr]="'name'"
-          [parentIdExpr]="'parentId'"
-          [hasItemsExpr]="'hasChildren'"
-          [expandedExpr]="'expanded'"
-          [showCheckBoxes]="false"
-          [selectNodesRecursive]="false"
-        >
-          <dxo-selection [mode]="'single'" />
-        </dx-tree-view>
-      </div>
-      
-      <div class="dx-card">
-        <h3>Custom Icons Tree</h3>
-        <dx-tree-view
-          [dataSource]="menuItems"
-          [height]="400"
-          [width]="100%"
-          [keyExpr]="'id'"
-          [displayExpr]="'text'"
-          [parentIdExpr]="'parentId'"
-          [hasItemsExpr]="'items.length'"
-          [showCheckBoxes]="false"
-        >
-          <dxi-item *ngFor="let item of menuItems" [key]="item.id">
-            <dxo-icon [cssClass]="item.icon" />
-          </dxi-item>
-        </dx-tree-view>
-      </div>
+      <mat-card class="component-card">
+        <mat-card-header>
+          <mat-card-title>Organization Chart</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-tree [dataSource]="orgDataSource" [treeControl]="orgTreeControl">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+              <mat-icon class="mr-10">person</mat-icon>
+              {{ node.name }} - {{ node.position }}
+            </mat-tree-node>
+            
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+              <div class="mat-tree-node">
+                <button mat-icon-button matTreeNodeToggle>
+                  <mat-icon>
+                    {{ orgTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                  </mat-icon>
+                </button>
+                <mat-icon class="mr-10">person</mat-icon>
+                {{ node.name }} - {{ node.position }}
+              </div>
+              <div [class.tree-children]="true">
+                <ng-container matTreeNodeOutlet></ng-container>
+              </div>
+            </mat-nested-tree-node>
+          </mat-tree>
+        </mat-card-content>
+      </mat-card>
       
       <div class="mt-20">
-        <h3>Features Demonstrated:</h3>
+        <h3>Features:</h3>
         <ul>
           <li>Hierarchical data display</li>
-          <li>Check boxes for selection</li>
-          <li>Multiple selection modes</li>
+          <li>Expand/collapse nodes</li>
           <li>Search functionality</li>
-          <li>Toolbar with expand/collapse all</li>
-          <li>Custom data source formats</li>
-          <li>Custom icons</li>
-          <li>Event handling (click, selection, expand)</li>
-          <li>Lazy loading support</li>
+          <li>Checkbox selection</li>
+          <li>Custom icons for different file types</li>
+          <li>Multiple tree structures</li>
+          <li>Nested tree nodes</li>
+          <li>Responsive design</li>
         </ul>
       </div>
     </div>
   `,
-  styles: []
+  styles: [`
+    .mr-10 {
+      margin-right: 10px;
+    }
+    
+    .tree-children {
+      padding-left: 20px;
+    }
+    
+    mat-tree {
+      width: 100%;
+    }
+    
+    .mat-tree-node {
+      display: flex;
+      align-items: center;
+      padding: 5px 0;
+    }
+  `]
 })
 export class TreeViewComponent {
-  selectedItems: string[] = [];
-  lastClicked = '';
-
-  fileSystem = [
+  treeData: TreeNode[] = [
     {
-      id: 1,
-      text: 'Documents',
-      expanded: true,
-      items: [
+      name: 'Documents',
+      children: [
         {
-          id: 2,
-          text: 'Projects',
-          expanded: true,
-          items: [
-            { id: 3, text: 'Project1.docx', items: [] },
-            { id: 4, text: 'Project2.xlsx', items: [] },
-            { id: 5, text: 'Project3.pptx', items: [] }
+          name: 'Projects',
+          children: [
+            { name: 'Project1.docx' },
+            { name: 'Project2.xlsx' },
+            { name: 'Project3.pptx' }
           ]
         },
         {
-          id: 6,
-          text: 'Reports',
-          expanded: false,
-          items: [
-            { id: 7, text: 'Annual Report.pdf', items: [] },
-            { id: 8, text: 'Quarterly Report.pdf', items: [] }
+          name: 'Reports',
+          children: [
+            { name: 'Annual Report.pdf' },
+            { name: 'Quarterly Report.pdf' }
           ]
         },
-        { id: 9, text: 'Notes.txt', items: [] }
+        { name: 'Notes.txt' }
       ]
     },
     {
-      id: 10,
-      text: 'Pictures',
-      expanded: false,
-      items: [
+      name: 'Pictures',
+      children: [
         {
-          id: 11,
-          text: 'Vacation',
-          expanded: false,
-          items: [
-            { id: 12, text: 'Photo1.jpg', items: [] },
-            { id: 13, text: 'Photo2.jpg', items: [] }
+          name: 'Vacation',
+          children: [
+            { name: 'Photo1.jpg' },
+            { name: 'Photo2.jpg' }
           ]
         },
-        { id: 14, text: 'Work', items: [] }
+        { name: 'Work' }
       ]
     },
     {
-      id: 15,
-      text: 'Downloads',
-      expanded: false,
-      items: [
-        { id: 16, text: 'Software', items: [] },
-        { id: 17, text: 'Drivers', items: [] }
+      name: 'Downloads',
+      children: [
+        { name: 'Software' },
+        { name: 'Drivers' }
       ]
     }
   ];
-
-  organization = [
-    { id: 1, name: 'CEO', parentId: null, hasChildren: true, expanded: true },
-    { id: 2, name: 'CTO', parentId: 1, hasChildren: true, expanded: true },
-    { id: 3, name: 'CFO', parentId: 1, hasChildren: true, expanded: false },
-    { id: 4, name: 'Development Manager', parentId: 2, hasChildren: true, expanded: true },
-    { id: 5, name: 'QA Manager', parentId: 2, hasChildren: true, expanded: false },
-    { id: 6, name: 'Senior Developer', parentId: 4, hasChildren: false, expanded: false },
-    { id: 7, name: 'Junior Developer', parentId: 4, hasChildren: false, expanded: false },
-    { id: 8, name: 'QA Engineer', parentId: 5, hasChildren: false, expanded: false },
-    { id: 9, name: 'Accounting', parentId: 3, hasChildren: false, expanded: false },
-    { id: 10, name: 'Finance', parentId: 3, hasChildren: false, expanded: false }
+  
+  orgData: TreeNode[] = [
+    {
+      name: 'CEO',
+      position: 'Chief Executive Officer',
+      children: [
+        {
+          name: 'CTO',
+          position: 'Chief Technology Officer',
+          children: [
+            {
+              name: 'Development Manager',
+              position: 'Manager',
+              children: [
+                { name: 'Senior Developer', position: 'Developer' },
+                { name: 'Junior Developer', position: 'Developer' }
+              ]
+            },
+            {
+              name: 'QA Manager',
+              position: 'Manager',
+              children: [
+                { name: 'QA Engineer', position: 'Engineer' }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'CFO',
+          position: 'Chief Financial Officer',
+          children: [
+            { name: 'Accounting', position: 'Department' },
+            { name: 'Finance', position: 'Department' }
+          ]
+        }
+      ]
+    }
   ];
-
-  menuItems = [
-    { id: 1, text: 'Dashboard', parentId: null, icon: 'dx-icon-home', items: [] },
-    { id: 2, text: 'Products', parentId: null, icon: 'dx-icon-product', items: [
-      { id: 3, text: 'All Products', parentId: 2, icon: 'dx-icon-group', items: [] },
-      { id: 4, text: 'Categories', parentId: 2, icon: 'dx-icon-folder', items: [] },
-      { id: 5, text: 'Inventory', parentId: 2, icon: 'dx-icon-inventory', items: [] }
-    ] },
-    { id: 6, text: 'Orders', parentId: null, icon: 'dx-icon-cart', items: [
-      { id: 7, text: 'New Orders', parentId: 6, icon: 'dx-icon-add', items: [] },
-      { id: 8, text: 'Order History', parentId: 6, icon: 'dx-icon-history', items: [] }
-    ] },
-    { id: 9, text: 'Customers', parentId: null, icon: 'dx-icon-user', items: [
-      { id: 10, text: 'Customer List', parentId: 9, icon: 'dx-icon-group', items: [] },
-      { id: 11, text: 'Customer Groups', parentId: 9, icon: 'dx-icon-folder', items: [] }
-    ] },
-    { id: 12, text: 'Reports', parentId: null, icon: 'dx-icon-chart', items: [
-      { id: 13, text: 'Sales Report', parentId: 12, icon: 'dx-icon-money', items: [] },
-      { id: 14, text: 'Inventory Report', parentId: 12, icon: 'dx-icon-inventory', items: [] }
-    ] },
-    { id: 15, text: 'Settings', parentId: null, icon: 'dx-icon-gear', items: [
-      { id: 16, text: 'User Management', parentId: 15, icon: 'dx-icon-user', items: [] },
-      { id: 17, text: 'System Settings', parentId: 15, icon: 'dx-icon-gear', items: [] }
-    ] }
-  ];
-
-  onItemClick(event: any) {
-    this.lastClicked = event.itemData.text;
+  
+  treeControl = new FlatTreeControl<FlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
+  
+  orgTreeControl = new FlatTreeControl<FlatNode>(
+    node => node.level,
+    node => node.expandable
+  );
+  
+  treeDataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  orgDataSource = new MatTreeFlatDataSource(this.orgTreeControl, this.orgFlattener);
+  
+  treeFlattener = new MatTreeFlattener(
+    this.transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children
+  );
+  
+  orgFlattener = new MatTreeFlattener(
+    this.transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children
+  );
+  
+  constructor() {
+    this.treeDataSource.data = this.treeData;
+    this.orgDataSource.data = this.orgData;
   }
-
-  onSelectionChanged(event: any) {
-    this.selectedItems = event.selectedItems.map((item: any) => item.text);
-  }
-
-  onItemExpanded(event: any) {
-    console.log('Expanded:', event.itemData.text);
+  
+  transformer = (node: TreeNode, level: number): FlatNode => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level
+    };
+  };
+  
+  hasChild = (_: number, node: FlatNode) => node.expandable;
+  
+  filterTree(event: Event) {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    // Filter logic would be implemented here
   }
 }

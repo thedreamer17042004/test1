@@ -7,57 +7,67 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: #f5f5f5;
+  color: #333;
 }
 
-/* DevExtreme theme */
-@import "~devextreme/dist/css/dx.light.css";
+/* Custom theme variables */
+$primary-color: #1976d2;
+$accent-color: #ff4081;
+$warn-color: #f44336;
+$success-color: #4caf50;
+$background-color: #f5f5f5;
+$card-background: #ffffff;
+$text-primary: #212121;
+$text-secondary: #757575;
+$border-color: #e0e0e0;
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
 
-/* Custom styles */
+/* App root */
 app-root {
   display: block;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-.dx-theme {
-  height: 100%;
-}
-
-/* Component container styles */
+/* Component container */
 .component-container {
   padding: 20px;
   margin: 20px 0;
-  background: white;
+  background: $card-background;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow;
 }
 
 .component-title {
   font-size: 1.5rem;
   font-weight: 500;
   margin-bottom: 20px;
-  color: #333;
-  border-bottom: 2px solid #1976d2;
+  color: $text-primary;
+  border-bottom: 2px solid $primary-color;
   padding-bottom: 10px;
 }
 
-/* Navigation styles */
+/* Navigation */
 .nav-menu {
-  background: #1976d2;
+  background: $primary-color;
   color: white;
   padding: 15px 20px;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .nav-menu a {
   color: white;
   text-decoration: none;
-  margin-right: 20px;
   padding: 8px 12px;
   border-radius: 4px;
   transition: background-color 0.3s;
+  font-size: 0.9rem;
 }
 
 .nav-menu a:hover {
@@ -69,39 +79,37 @@ app-root {
   font-weight: 500;
 }
 
-/* Grid and layout */
+/* App content */
+.app-content {
+  padding: 20px;
+  min-height: calc(100vh - 64px);
+}
+
+/* Grid layout */
 .app-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 20px;
-  padding: 20px;
 }
 
 /* Card styles */
 .component-card {
-  background: white;
+  background: $card-background;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow;
   transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
 }
 
 .component-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: $shadow-hover;
 }
 
 .component-card h3 {
   margin-top: 0;
-  color: #1976d2;
+  color: $primary-color;
   font-size: 1.2rem;
-}
-
-.component-card p {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 15px;
 }
 
 /* Button styles */
@@ -111,16 +119,66 @@ app-root {
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .btn-primary {
-  background-color: #1976d2;
+  background-color: $primary-color;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #1565c0;
+  background-color: darken($primary-color, 10%);
+}
+
+.btn-success {
+  background-color: $success-color;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: darken($success-color, 10%);
+}
+
+.btn-danger {
+  background-color: $warn-color;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: darken($warn-color, 10%);
+}
+
+.btn-normal {
+  background-color: #e0e0e0;
+  color: $text-primary;
+}
+
+.btn-normal:hover {
+  background-color: #bdbdbd;
+}
+
+.btn-default {
+  background-color: #f5f5f5;
+  color: $text-primary;
+  border: 1px solid $border-color;
+}
+
+.btn-default:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-icon {
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Form styles */
@@ -132,7 +190,7 @@ app-root {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: $text-primary;
 }
 
 .form-group input,
@@ -140,16 +198,23 @@ app-root {
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid $border-color;
   border-radius: 4px;
   font-size: 0.9rem;
+  font-family: inherit;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #1976d2;
+  border-color: $primary-color;
+  box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 /* Table styles */
@@ -165,12 +230,15 @@ table {
 th, td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $border-color;
 }
 
 th {
   background-color: #f5f5f5;
   font-weight: 500;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  text-transform: uppercase;
 }
 
 tr:hover {
@@ -182,14 +250,90 @@ tr:hover {
   text-align: center;
 }
 
-.mt-20 {
-  margin-top: 20px;
+.text-right {
+  text-align: right;
 }
 
-.mb-20 {
-  margin-bottom: 20px;
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.p-10 { padding: 10px; }
+.p-20 { padding: 20px; }
+
+/* Badge */
+.badge {
+  background: $accent-color;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 12px;
+  display: inline-block;
 }
 
-.p-20 {
-  padding: 20px;
+/* Status indicators */
+.status-active {
+  color: $success-color;
+  font-weight: 500;
+}
+
+.status-inactive {
+  color: $text-secondary;
+  font-style: italic;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #757575;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Material Icons */
+.material-icons {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-menu {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .nav-menu a {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .component-container {
+    padding: 15px;
+  }
+  
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
 }

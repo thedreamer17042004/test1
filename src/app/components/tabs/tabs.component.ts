@@ -1,120 +1,120 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxTabsModule, DxTabPanelModule } from 'devextreme-angular';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tabs',
   standalone: true,
-  imports: [CommonModule, DxTabsModule, DxTabPanelModule],
+  imports: [CommonModule, MatTabsModule, MatCardModule, MatButtonModule, MatIconModule],
   template: `
     <div class="component-container">
-      <h2 class="component-title">Tabs Components</h2>
+      <h2 class="component-title">Custom Tabs</h2>
       
-      <!-- Simple Tabs -->
-      <div class="component-card mb-20">
-        <h3>Simple Tabs</h3>
-        <dx-tabs
-          [dataSource]="simpleTabs"
-          [height]="300"
-          [width]="100%"
-          [scrollingEnabled]="true"
-          [showNavButtons]="true"
-          (onSelectionChanged)="onTabSelected($event)"
-        >
-          <div *dxTemplate="let tab of 'content'">
-            <div class="tab-content">
-              <h4>{{ tab.title }}</h4>
-              <p>{{ tab.content }}</p>
-            </div>
-          </div>
-        </dx-tabs>
-        <p class="mt-20"><strong>Selected Tab:</strong> {{ selectedSimpleTab || 'None' }}</p>
-      </div>
+      <!-- Basic Tabs -->
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>Basic Tabs</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Tab 1">
+              <div class="tab-content">
+                <h3>Tab 1 Content</h3>
+                <p>This is the content of Tab 1. You can put any content here.</p>
+              </div>
+            </mat-tab>
+            <mat-tab label="Tab 2">
+              <div class="tab-content">
+                <h3>Tab 2 Content</h3>
+                <p>This is the content of Tab 2. Each tab can have different content.</p>
+              </div>
+            </mat-tab>
+            <mat-tab label="Tab 3">
+              <div class="tab-content">
+                <h3>Tab 3 Content</h3>
+                <p>This is the content of Tab 3. Tabs are useful for organizing content.</p>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
       
       <!-- Tabs with Icons -->
-      <div class="component-card mb-20">
-        <h3>Tabs with Icons</h3>
-        <dx-tabs
-          [dataSource]="iconTabs"
-          [height]="300"
-          [width]="100%"
-          [iconPosition]="'top'"
-          [selectionMode]="'single'"
-        >
-          <div *dxTemplate="let tab of 'content'">
-            <div class="tab-content">
-              <h4><i class="dx-icon {{ tab.icon }}"></i> {{ tab.title }}</h4>
-              <p>{{ tab.content }}</p>
-            </div>
-          </div>
-        </dx-tabs>
-      </div>
+      <mat-card class="component-card mb-20">
+        <mat-card-header>
+          <mat-card-title>Tabs with Icons</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Dashboard">
+              <ng-template matTabLabel>
+                <mat-icon>dashboard</mat-icon> Dashboard
+              </ng-template>
+              <div class="tab-content">
+                <p>Dashboard overview with key metrics and statistics.</p>
+              </div>
+            </mat-tab>
+            <mat-tab label="Products">
+              <ng-template matTabLabel>
+                <mat-icon>inventory</mat-icon> Products
+              </ng-template>
+              <div class="tab-content">
+                <p>Product catalog management and inventory tracking.</p>
+              </div>
+            </mat-tab>
+            <mat-tab label="Orders">
+              <ng-template matTabLabel>
+                <mat-icon>shopping_cart</mat-icon> Orders
+              </ng-template>
+              <div class="tab-content">
+                <p>Order processing and management system.</p>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
       
-      <!-- TabPanel (Tabs with Content Panels) -->
-      <div class="component-card mb-20">
-        <h3>TabPanel (Tabs with Content Panels)</h3>
-        <dx-tab-panel
-          [dataSource]="tabPanelItems"
-          [height]="400"
-          [width]="100%"
-          [loop]="false"
-          [animationEnabled]="true"
-          [swipeEnabled]="true"
-          (onSelectionChanged)="onTabPanelSelected($event)"
-        >
-          <div *dxTemplate="let item of 'title'">
-            <span class="dx-icon {{ item.icon }}"></span>
-            <span>{{ item.title }}</span>
+      <!-- Dynamic Tabs -->
+      <mat-card class="component-card">
+        <mat-card-header>
+          <mat-card-title>Dynamic Tabs</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-tab-group (selectedTabChange)="onTabChange($event)">
+            <mat-tab *ngFor="let tab of dynamicTabs" [label]="tab.title">
+              <div class="tab-content">
+                <h3>{{ tab.title }}</h3>
+                <p>{{ tab.content }}</p>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+          
+          <div class="mt-20">
+            <button mat-raised-button color="primary" (click)="addTab()">
+              <mat-icon>add</mat-icon> Add Tab
+            </button>
+            <button mat-button color="warn" (click)="removeTab()" [disabled]="dynamicTabs.length <= 1">
+              <mat-icon>remove</mat-icon> Remove Tab
+            </button>
           </div>
           
-          <div *dxTemplate="let item of 'content'">
-            <div class="tab-panel-content">
-              <h4>{{ item.title }}</h4>
-              <p>{{ item.content }}</p>
-              <div *ngIf="item.details" class="details-section">
-                <h5>Details:</h5>
-                <ul>
-                  <li *ngFor="let detail of item.details">{{ detail }}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </dx-tab-panel>
-        <p class="mt-20"><strong>Selected Panel:</strong> {{ selectedTabPanel || 'None' }}</p>
-      </div>
-      
-      <!-- Vertical Tabs -->
-      <div class="component-card">
-        <h3>Vertical Tabs</h3>
-        <dx-tabs
-          [dataSource]="verticalTabs"
-          [height]="400"
-          [width]="100%"
-          [orientation]="'vertical'"
-          [tabPosition]="'left'"
-          [selectionMode]="'single'"
-        >
-          <div *dxTemplate="let tab of 'content'">
-            <div class="tab-content">
-              <h4>{{ tab.title }}</h4>
-              <p>{{ tab.content }}</p>
-            </div>
-          </div>
-        </dx-tabs>
-      </div>
+          <p class="mt-20"><strong>Selected Tab Index:</strong> {{ selectedTabIndex }}</p>
+        </mat-card-content>
+      </mat-card>
       
       <div class="mt-20">
-        <h3>Features Demonstrated:</h3>
+        <h3>Features:</h3>
         <ul>
-          <li>Simple tabs with text content</li>
+          <li>Basic tabs with text labels</li>
           <li>Tabs with icons</li>
-          <li>TabPanel with separate title and content templates</li>
-          <li>Vertical tabs layout</li>
-          <li>Scrolling and navigation buttons</li>
-          <li>Swipe gestures (for touch devices)</li>
-          <li>Animation between tabs</li>
-          <li>Selection event handling</li>
-          <li>Custom templates for tab content</li>
+          <li>Dynamic tabs (add/remove)</li>
+          <li>Tab selection event handling</li>
+          <li>Responsive design</li>
+          <li>Custom tab content</li>
+          <li>Material Design styling</li>
         </ul>
       </div>
     </div>
@@ -122,96 +122,41 @@ import { DxTabsModule, DxTabPanelModule } from 'devextreme-angular';
   styles: [`
     .tab-content {
       padding: 20px;
-      height: 100%;
-      overflow-y: auto;
     }
     
-    .tab-panel-content {
-      padding: 20px;
-      height: 100%;
-      overflow-y: auto;
+    mat-tab-group {
+      width: 100%;
     }
     
-    .details-section {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid #eee;
-    }
-    
-    .details-section h5 {
-      margin-bottom: 10px;
-      color: #666;
-    }
-    
-    .details-section ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-    
-    .details-section li {
-      margin-bottom: 5px;
+    .mt-20 {
+      margin-top: 20px;
     }
   `]
 })
 export class TabsComponent {
-  selectedSimpleTab = '';
-  selectedTabPanel = '';
-
-  simpleTabs = [
-    { title: 'Tab 1', content: 'This is the content of Tab 1. Simple text content displayed here.' },
-    { title: 'Tab 2', content: 'Content for Tab 2 goes here. You can put any content in each tab.' },
-    { title: 'Tab 3', content: 'Tab 3 content. Each tab can have different content and functionality.' },
-    { title: 'Tab 4', content: 'More content in Tab 4. Tabs are useful for organizing content.' },
-    { title: 'Tab 5', content: 'Final tab with content. You can add as many tabs as needed.' }
+  selectedTabIndex = 0;
+  
+  dynamicTabs = [
+    { title: 'Dynamic Tab 1', content: 'Content for dynamic tab 1' },
+    { title: 'Dynamic Tab 2', content: 'Content for dynamic tab 2' },
+    { title: 'Dynamic Tab 3', content: 'Content for dynamic tab 3' }
   ];
-
-  iconTabs = [
-    { title: 'Dashboard', icon: 'home', content: 'Dashboard overview with key metrics and statistics.' },
-    { title: 'Products', icon: 'product', content: 'Product catalog management and inventory tracking.' },
-    { title: 'Orders', icon: 'cart', content: 'Order processing and management system.' },
-    { title: 'Customers', icon: 'user', content: 'Customer relationship management and profiles.' },
-    { title: 'Reports', icon: 'chart', content: 'Comprehensive reporting and analytics tools.' }
-  ];
-
-  tabPanelItems = [
-    {
-      title: 'Personal Info',
-      icon: 'user',
-      content: 'Manage your personal information and profile settings.',
-      details: ['Name', 'Email', 'Phone', 'Address']
-    },
-    {
-      title: 'Security',
-      icon: 'lock',
-      content: 'Configure security settings and authentication options.',
-      details: ['Password', 'Two-factor authentication', 'Login history', 'Security questions']
-    },
-    {
-      title: 'Notifications',
-      icon: 'bell',
-      content: 'Set up notification preferences and alerts.',
-      details: ['Email notifications', 'Push notifications', 'SMS alerts', 'Notification frequency']
-    },
-    {
-      title: 'Privacy',
-      icon: 'shield',
-      content: 'Control your privacy settings and data sharing preferences.',
-      details: ['Data sharing', 'Cookie settings', 'Privacy policy', 'Data export']
-    }
-  ];
-
-  verticalTabs = [
-    { title: 'Section 1', content: 'Content for vertical tab section 1.' },
-    { title: 'Section 2', content: 'Content for vertical tab section 2.' },
-    { title: 'Section 3', content: 'Content for vertical tab section 3.' },
-    { title: 'Section 4', content: 'Content for vertical tab section 4.' }
-  ];
-
-  onTabSelected(event: any) {
-    this.selectedSimpleTab = event.selectedItem.title;
+  
+  onTabChange(event: any) {
+    this.selectedTabIndex = event.index;
   }
-
-  onTabPanelSelected(event: any) {
-    this.selectedTabPanel = event.selectedItem.title;
+  
+  addTab() {
+    const newIndex = this.dynamicTabs.length + 1;
+    this.dynamicTabs.push({
+      title: `Dynamic Tab ${newIndex}`,
+      content: `Content for dynamic tab ${newIndex}`
+    });
+  }
+  
+  removeTab() {
+    if (this.dynamicTabs.length > 1) {
+      this.dynamicTabs.pop();
+    }
   }
 }
